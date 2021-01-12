@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Elementor Extension Common
+ * Plugin Name: Elementor Common Extension
  * Description: Custom Elementor extension which includes custom widgets.
- * Plugin URI:  https://www.anahian.com/
+ * Plugin URI:  https://anahian.com/
  * Version:     1.0.0
  * Author:      Abdullah Nahian
- * Author URI:  https://www.anahian.com/
+ * Author URI:  https://anahian.com/
  * Text Domain: elementor-common
  * Domain Path: /languages
  */
@@ -15,7 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * EWA Elementor Ashley Class
  *
  * The main class that initiates and runs the plugin.
  *
@@ -152,8 +151,8 @@ final class Elementor_Common_Extension {
 		add_action( 'elementor/widgets/widgets_registered', [ $this, 'init_widgets' ] );
 		add_action( 'elementor/controls/controls_registered', [ $this, 'init_controls' ] );
 
-        // added by EWA - action hook for 'ewa-ashley, EWA Elements' custom category for panel widgets
-		add_action( 'elementor/init', [ $this, 'elementor_category' ] );
+        // Category Init
+		add_action( 'elementor/init', [ $this, 'elementor_common_category' ] );
 
 	}
 
@@ -173,7 +172,7 @@ final class Elementor_Common_Extension {
 		$message = sprintf(
 			/* translators: 1: Plugin name 2: Elementor */
 			esc_html__( '"%1$s" requires "%2$s" to be installed and activated.', 'elementor-common' ),
-			'<strong>' . esc_html__( 'EWA Elementor Ashley', 'elementor-common' ) . '</strong>',
+			'<strong>' . esc_html__( 'Elementor Common Extension', 'elementor-common' ) . '</strong>',
 			'<strong>' . esc_html__( 'Elementor', 'elementor-common' ) . '</strong>'
 		);
 
@@ -197,7 +196,7 @@ final class Elementor_Common_Extension {
 		$message = sprintf(
 			/* translators: 1: Plugin name 2: Elementor 3: Required Elementor version */
 			esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'elementor-common' ),
-			'<strong>' . esc_html__( 'EWA Elementor Ashley', 'elementor-common' ) . '</strong>',
+			'<strong>' . esc_html__( 'Elementor Common Extension', 'elementor-common' ) . '</strong>',
 			'<strong>' . esc_html__( 'Elementor', 'elementor-common' ) . '</strong>',
 			 self::MINIMUM_ELEMENTOR_VERSION
 		);
@@ -222,7 +221,7 @@ final class Elementor_Common_Extension {
 		$message = sprintf(
 			/* translators: 1: Plugin name 2: PHP 3: Required PHP version */
 			esc_html__( '"%1$s" requires "%2$s" version %3$s or greater.', 'elementor-common' ),
-			'<strong>' . esc_html__( 'EWA Elementor Ashley', 'elementor-common' ) . '</strong>',
+			'<strong>' . esc_html__( 'Elementor Common Extension', 'elementor-common' ) . '</strong>',
 			'<strong>' . esc_html__( 'PHP', 'elementor-common' ) . '</strong>',
 			 self::MINIMUM_PHP_VERSION
 		);
@@ -242,49 +241,55 @@ final class Elementor_Common_Extension {
 	 */
 	public function init_widgets() {
 
-		// Include Widget files
 		require_once( __DIR__ . '/widgets/elementor-common.php' );
 
 		// added by EWA - EWA own Register widgets, loading all widget names
 
 		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new \Elementor_Common_Widget() );
-		
-
 
 	}
 
-	// added by EWA
+	/**
+	 * Init Controls
+	 *
+	 * Include controls files and register them
+	 *
+	 * @since 1.0.0
+	 *
+	 * @access public
+	 */
+	public function init_controls() {
+
+		/*
+		* Todo: this block needs to be commented out when the custom control is ready
+		*
+		*
+		// Include Control files
+		require_once( __DIR__ . '/controls/test-control.php' );
+
+		// Register control
+		\Elementor\Plugin::$instance->controls_manager->register_control( 'control-type-', new \Test_Control() );
+		*/
+
+	}
+
+	// Custom CSS
 	public function widget_styles() {
-
-			// todo: file path needs to replaced by minified one
-			wp_register_style( 'ewa-elementor-style', plugins_url( 'style.css', __FILE__ ) );
-			wp_enqueue_style('ewa-elementor-style');
-
+		wp_register_style( 'elementor-common-style', plugins_url( 'style.css', __FILE__ ) );
 	}	
 
-    // added by EWA
+    // Custom JS
 	public function widget_scripts() {
-
-			// todo: file path needs to replaced by minified one
-		    // name needs to modified
-		    wp_register_script( 'ewa-elementor-slick-js', plugins_url( 'assets/js/vendor/slick.min.js', __FILE__ ) );
-		    wp_register_script( 'ewa-elementor-waypoints-js', plugins_url( 'assets/js/vendor/waypoints.min.js', __FILE__ ) );
-		    wp_register_script( 'ewa-elementor-counter-js', plugins_url( 'assets/js/vendor/jquery.counterup.min.js', __FILE__ ) );
-			wp_register_script( 'ewa-elementor-script', plugins_url( 'assets/minified/js/scripts.min.js', __FILE__ ) );
-			wp_enqueue_script('ewa-elementor-slick-js');
-			wp_enqueue_script('ewa-elementor-waypoints-js');
-			wp_enqueue_script('ewa-elementor-counter-js');
-			wp_enqueue_script('ewa-elementor-script');
-
+		wp_register_script( 'elementor-common-js', plugins_url( 'main.js', __FILE__ ) );
 	}
 
-    // added by EWA - added a custom category for panel widgets which is added by an action hook at the top 'init'
-    public function elementor_category () {
+    // Custom Category
+    public function elementor_common_category () {
 
 	   \Elementor\Plugin::$instance->elements_manager->add_category( 
 	   	'elementor-common',
 	   	[
-	   		'title' => __( 'Elementor Category', 'elementor-common' ),
+	   		'title' => __( 'Elementor Common Category', 'elementor-common' ),
 	   		'icon' => 'fa fa-plug', //default icon
 	   	],
 	   	2 // position
