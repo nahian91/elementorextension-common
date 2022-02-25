@@ -145,6 +145,10 @@ final class Elementor_Common_Extension {
 			add_action( 'admin_notices', [ $this, 'admin_notice_minimum_php_version' ] );
 			return;
 		}
+		
+		add_action( 'elementor/frontend/after_enqueue_styles', [ $this, 'widget_styles' ] );
+
+		add_action('elementor/frontend/after_enqueue_scripts', [ $this, 'widget_scripts' ] );
 
 
 		// Add Plugin actions
@@ -276,11 +280,13 @@ final class Elementor_Common_Extension {
 	// Custom CSS
 	public function widget_styles() {
 		wp_register_style( 'elementor-common-style', plugins_url( 'style.css', __FILE__ ) );
+		wp_enqueue_style('elementor-common-style');
 	}	
 
     // Custom JS
 	public function widget_scripts() {
 		wp_register_script( 'elementor-common-js', plugins_url( 'main.js', __FILE__ ) );
+		wp_enqueue_script('elementor-common-js');
 	}
 
     // Custom Category
